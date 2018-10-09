@@ -12,6 +12,12 @@ class CoordSystem(cadquery.Plane):
         # impose a default to: XY plane, zero offset
         super(CoordSystem, self).__init__(origin, xDir, normal)
 
+    def __eq__(self, other):
+        if not isinstance(other, CoordSystem):
+            return False
+
+        return self.origin.approxEq(other.origin) and self.xDir.approxEq(other.xDir) and self.zDir.approxEq(other.zDir)
+
     @classmethod
     def from_plane(cls, plane):
         """
@@ -109,11 +115,9 @@ class CoordSystem(cadquery.Plane):
         z_vertex = cadquery.Vector(0, 0, 1)  # vertex along +Z-axis
 
         # Transform reference points
-        print("offset: {}".format(offset))
         offset = matrix.multiply(offset)
         x_vertex = matrix.multiply(x_vertex)
         z_vertex = matrix.multiply(z_vertex)
-
         # Get axis vectors (relative to offset vertex)
         x_axis = x_vertex - offset
         z_axis = z_vertex - offset
@@ -236,8 +240,8 @@ class CoordSystem(cadquery.Plane):
         elif isinstance(other, cadquery.Vector):
             # CoordSystem + cadquery.Vector
             transform = self.local_to_world_transform
-            return type(other)(
-                transform.multiply(other.wrapped)
+            return cadquery.Vector(
+                transform.multiply(other)
             )
 
         elif isinstance(other, cadquery.CQ):

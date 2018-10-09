@@ -36,7 +36,12 @@ class ComponentTest(unittest.TestCase):
         self.assertGreater(obj.bounding_box.DiagonalLength, 0)
 
     def assertPartHasVolume(self, obj):
-        self.assertGreater(obj.local_obj.val().wrapped.Volume, 0)  # has volume
+        shape = obj.local_obj.val()
+        # vol = shape.wrapped.Volume # works with freecad_impl, not occ
+        vol = shape.Volume() # volume method from cadquery.Shape in occ_impl
+        # print("@ assertPartHasVolume(), shape = {}".format(obj.local_obj.val()))
+        # print("@ assertPartHasVolume(), shape.wrapped = {}".format(shape))
+        self.assertGreater(vol, 0)  # has volume
 
     def assertAssembyHasComponents(self, obj):
         self.assertGreater(len(obj.components), 0)  # has components

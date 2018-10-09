@@ -71,12 +71,12 @@ class CoordSystemTests(CQPartsTest):
         )
 
         # random #1
-        m = Matrix(
+        m = Matrix([
             -0.146655,-0.271161,-0.951296,0.0376659,
             -0.676234,0.729359,-0.103649,0.615421,
             0.721942,0.628098,-0.290333,-0.451955,
             0,0,0,1
-        )
+        ])
         cs = CoordSystem.from_transform(m)
         self.assertEqual(cs, CoordSystem(
             origin=(0.0376659, 0.615421, -0.451955),
@@ -85,12 +85,12 @@ class CoordSystemTests(CQPartsTest):
         ))
 
         # random #2
-        m = Matrix(
+        m = Matrix([
             0.423408,-0.892837,-0.153517,-0.163654,
             -0.617391,-0.408388,0.672345,0.835824,
             -0.662989,-0.189896,-0.724144,0.632804,
             0,0,0,1
-        )
+        ])
         cs = CoordSystem.from_transform(m)
         self.assertEqual(cs, CoordSystem(
             origin=(-0.163654, 0.835824, 0.632804),

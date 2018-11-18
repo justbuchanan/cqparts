@@ -17,12 +17,7 @@ class CoordSystemTests(CQPartsTest):
         """Converts cadquery.Matrix to a list"""
         return [
             round(v, digits)
-            for v in [
-                m.A11, m.A12, m.A13, m.A14,
-                m.A21, m.A22, m.A23, m.A24,
-                m.A31, m.A32, m.A33, m.A34,
-                m.A41, m.A42, m.A43, m.A44
-            ]
+            for v in m.transposed_list()
         ]
 
     def assertMatrixAlmostEquals(self, first, second, places=6):
@@ -62,16 +57,14 @@ class CoordSystemTests(CQPartsTest):
         self.assertEqual(cs.zDir, Vector(1,0,0))
 
     def test_from_matrix(self):
-        from FreeCAD import Matrix
-
         # identity
         self.assertEqual(
-            CoordSystem.from_transform(Matrix()),
+            CoordSystem.from_transform(cadquery.Matrix()),
             CoordSystem()
         )
 
         # random #1
-        m = Matrix(
+        m = cadquery.Matrix(
             -0.146655,-0.271161,-0.951296,0.0376659,
             -0.676234,0.729359,-0.103649,0.615421,
             0.721942,0.628098,-0.290333,-0.451955,
@@ -85,7 +78,7 @@ class CoordSystemTests(CQPartsTest):
         ))
 
         # random #2
-        m = Matrix(
+        m = cadquery.Matrix(
             0.423408,-0.892837,-0.153517,-0.163654,
             -0.617391,-0.408388,0.672345,0.835824,
             -0.662989,-0.189896,-0.724144,0.632804,

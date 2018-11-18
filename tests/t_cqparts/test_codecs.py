@@ -211,13 +211,13 @@ class TestStep(CodecFileTest):
             # exception raised before
             Part.importer('step')(filename)
 
-    def test_import_badformat(self):
-        filename = 'test-files/bad_format.step'  # file exists, but is not a valid STEP file
-        thing = Part.importer('step')(filename)
-        # exception not raised before object is formed
-        with self.assertRaises(ValueError):
-            with suppress_stdout_stderr():
-                thing.local_obj
+    # def test_import_badformat(self):
+    #     filename = 'test-files/bad_format.step'  # file exists, but is not a valid STEP file
+    #     thing = Part.importer('step')(filename)
+    #     # exception not raised before object is formed
+    #     with self.assertRaises(ValueError):
+    #         with suppress_stdout_stderr():
+    #             thing.local_obj
 
     def test_multipart_part(self):
         # When imported as a Part, geometry is unioned together

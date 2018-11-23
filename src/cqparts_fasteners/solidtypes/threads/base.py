@@ -341,7 +341,7 @@ class Thread(cqparts.Part):
             log.warning("thread shape not valid")
             new_thread = thread_shape.copy()
             new_thread.sewShape()
-            thread.objects[0] = FreeCADPart.Solid(new_thread)
+            thread.objects[0] = FreeCADPart.Solid(new_thread) # TODO
             if not thread.objects[0].isValid():
                 log.error("sewn thread STILL not valid")
                 raise SolidValidityError(

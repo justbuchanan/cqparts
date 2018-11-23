@@ -211,6 +211,7 @@ class TestStep(CodecFileTest):
             # exception raised before
             Part.importer('step')(filename)
 
+    # TODO
     # def test_import_badformat(self):
     #     filename = 'test-files/bad_format.step'  # file exists, but is not a valid STEP file
     #     thing = Part.importer('step')(filename)

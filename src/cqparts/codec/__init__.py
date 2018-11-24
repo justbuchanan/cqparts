@@ -184,6 +184,7 @@ __all__ = [
     'STLExporter',
     'SVGExporter',
     'ThreejsJSONExporter', 'ThreejsJSONAssemblyExporter',
+    'URDFExporter',
 
 ]
 
@@ -193,3 +194,4 @@ from .step import STEPExporter, STEPPartImporter, STEPAssemblyImporter
 from .stl import STLExporter
 from .svg import SVGExporter
 from .threejs_json import ThreejsJSONExporter, ThreejsJSONAssemblyExporter
+from .urdf import URDFExporter

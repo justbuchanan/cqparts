@@ -9,6 +9,7 @@ modelDir = 'urdfout'
 urdfFile = os.path.join(modelDir, 'car.urdf')
 
 model = SimpleCar()
+# model = Box()
 model.exporter('urdf')(
     filename=urdfFile
 )

@@ -1,3 +1,5 @@
+import os
+
 # note: lxml is not installed by default
 from lxml import etree
 
@@ -19,16 +21,24 @@ class URDFExporter(Exporter):
 
         e.attrib['name'] = 'my_robot_1'
 
-        counter = 0
+        # counter = 0
 
         def add(obj, parentXmlNode, keypath=''):
-            nonlocal counter
+            # nonlocal counter
             if isinstance(obj, Assembly):
                 subkeypath = keypath + '_' if keypath else ''
                 for name, subAsm in obj.components.items():
                     add(subAsm, parentXmlNode, keypath=subkeypath+name)
             else: # Part
-                counter += 1
+                dirpath = os.path.dirname(filename)
+                stlName = keypath + '.stl'
+                stlOut = os.path.join(dirpath, stlName)
+
+                obj.exporter('stl')(stlOut)
+                log.info('Exported {!r}'.format(stlOut))
+                print('Exported {!r}'.format(stlOut))
+
+                # counter += 1
                 ee = etree.SubElement(parentXmlNode, 'link', {
                     'name': keypath,
                     })
@@ -57,7 +67,7 @@ class URDFExporter(Exporter):
                 })
                 visual_geometry = etree.SubElement(visual, 'geometry')
                 etree.SubElement(visual_geometry, 'mesh', {
-                    'filename': "package://edo_sim/meshes/link_3.STL",
+                    'filename': stlName,
                 })
                 visual_material = etree.SubElement(visual, 'material', {
                     'name': "" # TODO: ?
@@ -73,10 +83,12 @@ class URDFExporter(Exporter):
                 })
                 collision_geometry = etree.SubElement(collision, 'geometry')
                 etree.SubElement(collision_geometry, 'mesh', {
-                    'filename': "package://edo_sim/meshes/link_3.STL",
+                    'filename': stlName,
                 })
 
-        add(self.obj, e)
+
+        kp = '' if isinstance(self.obj, Assembly) else self.obj.__class__.__name__
+        add(self.obj, e, keypath=kp)
 
         tree = etree.ElementTree(e)
         tree.write(filename, pretty_print=True)

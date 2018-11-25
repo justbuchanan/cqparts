@@ -4,6 +4,7 @@ import os
 import tempfile
 import shutil
 from collections import defaultdict
+import subprocess
 
 from base import CQPartsTest, CodecRegisterTests
 from base import testlabel
@@ -13,7 +14,7 @@ from base import suppress_stdout_stderr
 from cqparts import codec
 from cqparts import Part, Assembly, Component
 
-from partslib import Box, CubeStack
+from partslib import Box, CubeStack, SimpleCar
 
 
 class CodecTest(CQPartsTest):
@@ -352,16 +353,27 @@ class CodecFolderTest(CodecTest):
 
 @testlabel('codec', 'codec_urdf')
 class TestUrdfExport(CodecFolderTest):
-    # TODO: run outputs through `check_urdf`
-    # - apt install liburdfdom-tools
+
+    def assertUrdfFileValid(self, filename):
+        # note: 'check_urdf' is part of liburdfdom-tools package on debian
+        print("Validating URDF file with `check_urdf`:")
+        ret = subprocess.run(['check_urdf', filename], stderr=subprocess.PIPE)
+        self.assertTrue(ret.returncode == 0, ret.stderr.decode('utf-8'))
 
     def test_simple_cube(self):
-        cube = Box()
-
-        modelDir = self.foldername
-        urdfFile = os.path.join(modelDir, 'cube.urdf')
-
-        cube.exporter('urdf')(
+        model = Box()
+        urdfFile = os.path.join(self.foldername, 'cube.urdf')
+        model.exporter('urdf')(
             filename=urdfFile
         )
         self.assertFilesizeNonZero(urdfFile)
+        self.assertUrdfFileValid(urdfFile)
+
+    def test_simple_car(self):
+        model = SimpleCar()
+        urdfFile = os.path.join(self.foldername, 'car.urdf')
+        model.exporter('urdf')(
+            filename=urdfFile
+        )
+        self.assertFilesizeNonZero(urdfFile)
+        self.assertUrdfFileValid(urdfFile)

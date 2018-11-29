@@ -15,15 +15,7 @@ class CoordSystemTests(CQPartsTest):
     @staticmethod
     def mat2list(m, digits=7):
         """Converts cadquery.Matrix to a list"""
-        return [
-            round(v, digits)
-            for v in [
-                m.A11, m.A12, m.A13, m.A14,
-                m.A21, m.A22, m.A23, m.A24,
-                m.A31, m.A32, m.A33, m.A34,
-                m.A41, m.A42, m.A43, m.A44
-            ]
-        ]
+        return [round(m[r,c], digits) for r in range(4) for c in range(4)]
 
     def assertMatrixAlmostEquals(self, first, second, places=6):
         """
